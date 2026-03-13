@@ -51,11 +51,11 @@ export class AuthService {
     throw new HttpException('This email is already exists', HttpStatus.CONFLICT);
 
   }
-
+  // TODO: This endpoint will be used in the Admin Panel later
   findAll() {
     return `This action returns all auth`;
   }
-
+  // TODO: This endpoint will be used in the Admin panel later.
   findOne(id: number) {
     return `This action returns a #${id} auth`;
   }
@@ -75,8 +75,16 @@ export class AuthService {
     return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async remove(userId: number) {
+    const result = await this.prisma.user.delete({
+      where: {
+        id: userId
+      }
+    });
+    if (!result) {
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND)
+    }
+    return result;
   }
 
   // Helper function to generate access and refresh tokens

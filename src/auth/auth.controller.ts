@@ -66,8 +66,9 @@ export class AuthController {
     return this.authService.update(user.id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  remove(@GetUser() user: RequestUser) {
+    return this.authService.remove(user.id);
   }
 }
