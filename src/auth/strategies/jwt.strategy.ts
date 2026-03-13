@@ -4,7 +4,9 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Prisma } from 'src/prisma/prisma.service';
 import { extractJwtFromCookie } from './jwt.extractor';
 import { JwtPayload } from '../types/JwtPayload';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(
     private configService: ConfigService,
