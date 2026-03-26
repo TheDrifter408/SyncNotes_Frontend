@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 
 import * as bcrypt from 'bcrypt';
 import { BCRYPT_SALT_ROUNDS } from 'src/constants';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -184,5 +185,30 @@ export class AuthService {
         hashed_refresh_token: hashedRefreshToken
       }
     });
+  }
+
+  setCookies(response: Response, tokens: { access_token: string, refresh_token: string }) {
+
+    const isProduction = this.configService.get('NODE_ENV') === 'production';
+
+    const accessTokenMaxAge = Number(this.configService.get('JWT_ACCESS_TOKEN_MAX_AGE'));
+    const refreshTokenMaxAge = Number(this.configService.get('JWT_REFRESH_TOKEN_MAX_AGE'));
+
+    const commonOptions = {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'strict' as const
+    }
+
+    response.cookie('access_token', tokens.access_token, {
+      ...commonOptions,
+      maxAge: accessTokenMaxAge,
+    });
+
+    response.cookie('refresh_token', tokens.refresh_token, {
+      ...commonOptions,
+      maxAge: refreshTokenMaxAge,
+    })
+
   }
 }
