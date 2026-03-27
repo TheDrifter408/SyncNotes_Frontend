@@ -17,8 +17,4 @@ export class BaseNoteDto {
   @IsDate()
   @Type(() => Date)
   updatedAt: Date;
-
-  @IsInt()
-  @IsNotEmpty()
-  userId: number;
 }

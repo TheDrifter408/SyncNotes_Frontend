@@ -201,7 +201,8 @@ export class AuthService {
     const commonOptions = {
       httpOnly: true,
       secure: isProduction,
-      sameSite: 'strict' as const
+      sameSite: 'lax' as const,
+      path: '/'
     }
 
     response.cookie('access_token', tokens.access_token, {
