@@ -1,4 +1,5 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
+import path from "path";
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
@@ -11,8 +12,13 @@ export default defineConfig({
       target: 'react',
       autoCodeSplitting: true,
     }),
-    tailwindcss(),
     react(),
+    tailwindcss(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, './src'),
+    }
+  }
 })
