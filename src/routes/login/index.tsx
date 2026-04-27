@@ -1,13 +1,110 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { loginSchema } from './-schema/schema';
+import { useForm, Controller } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Header } from '@/components/header';
+import { Button } from '@/components/ui/button';
+import IconV1 from "@/assets/variant-1.svg?react";
+
 
 export const Route = createFileRoute('/login/')({
   component: Login
 });
 
+type ZFormValues = z.infer<typeof loginSchema>;
+
 function Login() {
+
+  const form = useForm<ZFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: ""
+    }
+  });
+
+  function onSubmit(data: ZFormValues) {
+    try {
+      const result = fetch('');
+    } catch (error) {
+
+    }
+  }
+
   return (
-    <div>
-      Hello from "/login"
+    <div className="h-full w-full flex flex-col justify-center">
+      <Header className={'px-4 py-4 border border-b justify-between'}>
+        <div className="text-white size-10">
+          <Link to="/">
+            <IconV1 className="w-full h-full" />
+          </Link>
+        </div>
+        <Button asChild>
+          <Link to="/login">Login</Link>
+        </Button>
+      </Header>
+      <Card className="w-[50%] mx-auto">
+        <CardHeader>
+          <CardTitle>Login</CardTitle>
+          <CardDescription>Login to your account to continue</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="email">
+                      Email
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="email"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="email@example.com"
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+            <FieldGroup>
+              <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="password">
+                      Password
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="password"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="*******"
+                      autoComplete="off"
+                      type="password"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   )
 }
