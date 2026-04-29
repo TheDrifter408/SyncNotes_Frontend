@@ -9,6 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import IconV1 from "@/assets/variant-1.svg?react";
+import { BASE_URL } from '@/constants';
+import { useMutation } from '@tanstack/react-query';
+import { useGlobalStore } from '@/store/store';
+import type { User } from '@/types/User';
 
 
 export const Route = createFileRoute('/login/')({
@@ -19,6 +23,33 @@ type ZFormValues = z.infer<typeof loginSchema>;
 
 function Login() {
 
+  const setUser = useGlobalStore((state) => state.setUser);
+
+  const loginMutation = useMutation({
+    mutationFn: async (loginValues: ZFormValues) => {
+      const result = await fetch(`${BASE_URL}/auth/signin`, {
+        headers: {
+          'content-type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(loginValues),
+      });
+
+      if (!result.ok) {
+        const error = await result.json();
+        console.log(error);
+        throw new Error(error);
+      }
+      return result.json();
+    },
+    onSuccess: (result) => {
+      setUser(result.data);
+    },
+    onError: (error) => {
+      console.error('ERROR: ', error);
+    }
+  });
+
   const form = useForm<ZFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -27,16 +58,12 @@ function Login() {
     }
   });
 
-  function onSubmit(data: ZFormValues) {
-    try {
-      const result = fetch('');
-    } catch (error) {
-
-    }
+  function onSubmit(loginValues: ZFormValues) {
+    loginMutation.mutate(loginValues);
   }
 
   return (
-    <div className="h-full w-full flex flex-col justify-center">
+    <div className="h-full w-full flex flex-col">
       <Header className={'px-4 py-4 border border-b justify-between'}>
         <div className="text-white size-10">
           <Link to="/">
@@ -44,10 +71,10 @@ function Login() {
           </Link>
         </div>
         <Button asChild>
-          <Link to="/login">Login</Link>
+          <Link to="/">Home</Link>
         </Button>
       </Header>
-      <Card className="w-[50%] mx-auto">
+      <Card className="w-[50%] mx-auto mt-[10 %]">
         <CardHeader>
           <CardTitle>Login</CardTitle>
           <CardDescription>Login to your account to continue</CardDescription>
@@ -102,6 +129,7 @@ function Login() {
                 )}
               />
             </FieldGroup>
+            <Button type="submit">Login</Button>
           </form>
         </CardContent>
       </Card>

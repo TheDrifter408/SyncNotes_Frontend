@@ -1,12 +1,12 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { useAuth } from './hooks/useAuth';
 import { routeTree } from './routeTree.gen';
-import type { TAuthContext } from './types/AuthContext';
+import { useGlobalStore } from './store/store';
 
 const router = createRouter({
   routeTree,
   context: {
-    auth: undefined! as TAuthContext,
+    user: null,
   }
 });
 
@@ -17,7 +17,7 @@ declare module '@tanstack/react-router' {
 }
 
 export function App() {
-  const auth = useAuth();
+  const user = useGlobalStore((state) => state.user);
 
-  return <RouterProvider router={router} context={{ auth }} />;
+  return <RouterProvider router={router} context={{ user }} />;
 }
