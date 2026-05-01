@@ -11,7 +11,7 @@ type StoreActions = {
   setUser: (user: User | null) => void;
   insertNote: (note: Note) => void;
   deleteNote: (noteId: string) => void;
-  updateNote: (noteId: string, note: Note) => void;
+  updateNote: (noteId: string, updates: Partial<Note>) => void;
 }
 
 export const useGlobalStore = create<GlobalState & StoreActions>((set, get) => ({
@@ -26,9 +26,21 @@ export const useGlobalStore = create<GlobalState & StoreActions>((set, get) => (
     newMap.delete(noteId);
     set({ notesMap: newMap });
   },
-  updateNote: (noteId: string, note: Note) => {
+  updateNote: (noteId: string, updates: Partial<Note>) => {
     const newMap = new Map(get().notesMap);
-    newMap.set(noteId, note);
+    const existingNote = newMap.get(noteId);
+
+    if (!existingNote) {
+      console.warn('No note exists with this id', noteId);
+      return;
+    }
+
+    const updatedNote = {
+      ...existingNote,
+      ...updates
+    } as Note;
+
+    newMap.set(noteId, updatedNote);
     set({ notesMap: newMap });
   },
   user: null,

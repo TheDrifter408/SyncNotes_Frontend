@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { loginSchema } from './-schema/schema';
 import { useForm, Controller } from "react-hook-form";
 import * as z from "zod";
@@ -12,7 +12,7 @@ import IconV1 from "@/assets/variant-1.svg?react";
 import { BASE_URL } from '@/constants';
 import { useMutation } from '@tanstack/react-query';
 import { useGlobalStore } from '@/store/store';
-import type { User } from '@/types/User';
+import { toast } from 'sonner';
 
 
 export const Route = createFileRoute('/login/')({
@@ -24,6 +24,8 @@ type ZFormValues = z.infer<typeof loginSchema>;
 function Login() {
 
   const setUser = useGlobalStore((state) => state.setUser);
+
+  const navigate = useNavigate();
 
   const loginMutation = useMutation({
     mutationFn: async (loginValues: ZFormValues) => {
@@ -44,9 +46,13 @@ function Login() {
     },
     onSuccess: (result) => {
       setUser(result.data);
+      navigate({
+        to: '/notes',
+      });
     },
     onError: (error) => {
-      console.error('ERROR: ', error);
+      console.log(error);
+      toast.error('Something went wrong.');
     }
   });
 
