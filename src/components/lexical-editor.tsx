@@ -1,14 +1,17 @@
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import { ContentEditable } from '@lexical/react/LexicalContentEditable';
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import {
+  LexicalComposer,
+  type InitialEditorStateType,
+} from "@lexical/react/LexicalComposer";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import type { EditorState } from 'lexical';
+import type { EditorState } from "lexical";
 
 interface EditorProps {
-  initialContent?: string;
+  initialContent?: InitialEditorStateType;
   onChange: (editorState: EditorState) => void;
   namespace?: string;
 }
@@ -16,7 +19,7 @@ interface EditorProps {
 const theme = {
   // Theme styling goes here
   //...
-}
+};
 
 // Catch any errors that occur during Lexical updates and log them
 // or throw them as needed. If you don't throw them, Lexical will
@@ -38,7 +41,7 @@ export function Editor({ initialContent, namespace, onChange }: EditorProps) {
       <RichTextPlugin
         contentEditable={
           <ContentEditable
-            aria-placeholder={'Enter some text...'}
+            aria-placeholder={"Enter some text..."}
             placeholder={<div>Enter some text...</div>}
           />
         }

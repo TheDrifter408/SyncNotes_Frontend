@@ -1,39 +1,49 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { loginSchema } from './-schema/schema';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { loginSchema } from "./-schema/schema";
 import { useForm, Controller } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Header } from '@/components/header';
-import { Button } from '@/components/ui/button';
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Header } from "@/components/header";
+import { Button } from "@/components/ui/button";
 import IconV1 from "@/assets/variant-1.svg?react";
-import { BASE_URL } from '@/constants';
-import { useMutation } from '@tanstack/react-query';
-import { useGlobalStore } from '@/store/store';
-import { toast } from 'sonner';
+import { BASE_URL } from "@/constants";
+import { useMutation } from "@tanstack/react-query";
+import { useGlobalStore } from "@/store/store";
+import { toast } from "sonner";
+import { useRouter } from "@tanstack/react-router";
 
-
-export const Route = createFileRoute('/login/')({
-  component: Login
+export const Route = createFileRoute("/login/")({
+  component: Login,
 });
 
 type ZFormValues = z.infer<typeof loginSchema>;
 
 function Login() {
-
   const setUser = useGlobalStore((state) => state.setUser);
 
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const loginMutation = useMutation({
     mutationFn: async (loginValues: ZFormValues) => {
       const result = await fetch(`${BASE_URL}/auth/signin`, {
         headers: {
-          'content-type': 'application/json'
+          "content-type": "application/json",
         },
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify(loginValues),
       });
 
@@ -44,24 +54,25 @@ function Login() {
       }
       return result.json();
     },
-    onSuccess: (result) => {
+    onSuccess: async (result) => {
       setUser(result.data);
-      navigate({
-        to: '/notes',
+      await router.invalidate();
+      await router.navigate({
+        to: "/notes",
       });
     },
     onError: (error) => {
       console.log(error);
-      toast.error('Something went wrong.');
-    }
+      toast.error("Something went wrong.");
+    },
   });
 
   const form = useForm<ZFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
-      password: ""
-    }
+      password: "",
+    },
   });
 
   function onSubmit(loginValues: ZFormValues) {
@@ -70,7 +81,7 @@ function Login() {
 
   return (
     <div className="h-full w-full flex flex-col">
-      <Header className={'px-4 py-4 border border-b justify-between'}>
+      <Header className={"px-4 py-4 border border-b justify-between"}>
         <div className="text-white size-10">
           <Link to="/">
             <IconV1 className="w-full h-full" />
@@ -93,9 +104,7 @@ function Login() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="email">
-                      Email
-                    </FieldLabel>
+                    <FieldLabel htmlFor="email">Email</FieldLabel>
                     <Input
                       {...field}
                       id="email"
@@ -106,7 +115,6 @@ function Login() {
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
-
                   </Field>
                 )}
               />
@@ -117,9 +125,7 @@ function Login() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="password">
-                      Password
-                    </FieldLabel>
+                    <FieldLabel htmlFor="password">Password</FieldLabel>
                     <Input
                       {...field}
                       id="password"
@@ -140,5 +146,5 @@ function Login() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
