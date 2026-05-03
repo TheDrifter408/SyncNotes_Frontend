@@ -31,7 +31,13 @@ function Note() {
 
   return (
     <div>
-      <Input type="text" placeholder="Untitled" onChange={onChangeTitle} />
+      <input
+        name="title"
+        className="text-3xl w-full p-2 border-none font-extrabold"
+        type="text"
+        placeholder="Untitled"
+        onChange={onChangeTitle}
+      />
       <Editor
         initialContent={note?.content || null}
         onChange={onEditorChange}
