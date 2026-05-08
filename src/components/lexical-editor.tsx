@@ -1,17 +1,15 @@
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
-import {
-  LexicalComposer,
-  type InitialEditorStateType,
-} from "@lexical/react/LexicalComposer";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import type { EditorState } from "lexical";
+import { InitializePlugin } from "@/routes/_auth/notes/-components/lexical-plugins/InitializePlugin";
 
 interface EditorProps {
-  initialContent?: InitialEditorStateType;
+  initialContent: string;
   onChange: (editorState: EditorState) => void;
   namespace?: string;
 }
@@ -89,7 +87,7 @@ export function Editor({ initialContent, namespace, onChange }: EditorProps) {
     namespace: namespace ?? "SyncNotesEditor",
     theme,
     onError,
-    editorState: initialContent,
+    editorState: null,
   };
 
   return (
@@ -99,6 +97,7 @@ export function Editor({ initialContent, namespace, onChange }: EditorProps) {
         placeholder={<div className="">Enter some text...</div>}
         ErrorBoundary={LexicalErrorBoundary}
       />
+      <InitializePlugin json={initialContent} />
       <OnChangePlugin onChange={onChange} />
       <HistoryPlugin />
       <AutoFocusPlugin />

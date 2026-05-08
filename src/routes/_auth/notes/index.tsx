@@ -1,46 +1,32 @@
-import { useGlobalStore } from '@/store/store';
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { db } from "@/db/syncNotesDb";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Index } from "./-components";
+import { INITIAL_EDITOR_STATE } from "@/lib/constants";
 
-export const Route = createFileRoute('/_auth/notes/')({
-  loader: () => {
-    const state = useGlobalStore.getState();
-    const { notesMap, insertNote } = state;
-
-    if (notesMap.size > 0) {
-      const firstNoteId = notesMap.keys().next().value;
-      if (firstNoteId) {
-        throw redirect({
-          to: '/notes/$noteId',
-          params: {
-            noteId: firstNoteId,
-          }
-        });
-      }
-    } else {
-      const newNoteId = crypto.randomUUID();
-      insertNote({
-        id: newNoteId,
-        title: "Untitled",
-        content: "",
-        lastUpdated: new Date().toISOString(),
-      });
+export const Route = createFileRoute("/_auth/notes/")({
+  loader: async () => {
+    const lastNote = await db.notes.orderBy("lastUpdated").reverse().first();
+    if (lastNote) {
       throw redirect({
         to: "/notes/$noteId",
         params: {
-          noteId: newNoteId,
-        }
-      })
+          noteId: lastNote.id,
+        },
+      });
     }
-
+    const newNoteId = crypto.randomUUID();
+    await db.notes.add({
+      id: newNoteId,
+      title: "Untitled",
+      content: INITIAL_EDITOR_STATE,
+      lastUpdated: new Date().toISOString(),
+    });
+    throw redirect({
+      to: "/notes/$noteId",
+      params: {
+        noteId: newNoteId,
+      },
+    });
   },
-  component: RouteComponent,
-})
-
-function RouteComponent() {
-
-  return (
-    <div className="w-full">
-      <p>Loading...</p>
-    </div>
-  )
-}
+  component: Index,
+});
