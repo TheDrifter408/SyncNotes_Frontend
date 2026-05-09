@@ -1,20 +1,20 @@
-import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import type { User } from '@/types/User';
-import { Toaster } from 'sonner';
+import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import type { User } from "@/types/User";
+import { Toaster } from "sonner";
+import type { QueryClient } from "@tanstack/react-query";
 
 interface AuthenticatedRouterContext {
-  user: User | null;
+    user: User | null;
+    queryClient: QueryClient;
 }
 
 export const Route = createRootRouteWithContext<AuthenticatedRouterContext>()({
-  component: () => (
-    <>
-      <Outlet />
-      <Toaster />
-      <TanStackRouterDevtools />
-    </>
-  ),
+    component: () => (
+        <>
+            <Outlet />
+            <Toaster />
+            <TanStackRouterDevtools />
+        </>
+    ),
 });
-
-
