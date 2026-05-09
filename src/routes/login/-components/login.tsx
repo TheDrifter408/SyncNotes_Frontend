@@ -54,6 +54,9 @@ export function Login() {
       await router.invalidate();
       await router.navigate({
         to: "/notes",
+        viewTransition: {
+          types: ["slide-left"],
+        },
       });
     },
     onError: (error) => {
@@ -83,7 +86,9 @@ export function Login() {
           </Link>
         </div>
         <Button asChild>
-          <Link to="/">Home</Link>
+          <Link to="/" viewTransition={{ types: ["slide-right"] }}>
+            Home
+          </Link>
         </Button>
       </Header>
       <Card className="w-[50%] mx-auto mt-[10 %]">
