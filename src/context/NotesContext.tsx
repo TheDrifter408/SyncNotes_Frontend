@@ -1,6 +1,6 @@
 import { createContext, type ChangeEvent, type ReactNode } from "react";
 
-interface NotesFilterContextValue {
+interface NotesContextValue {
   selectedNoteIds: Set<string>;
   setSelectedNoteIds: (selectedNoteIds: Set<string>) => void;
   isMultiSelect: boolean;
@@ -13,22 +13,20 @@ interface NotesFilterContextValue {
   onDeleteSelected: () => Promise<void>;
 }
 
-export const NoteFilterContext = createContext<NotesFilterContextValue>(
-  {} as NotesFilterContextValue,
+export const NotesContext = createContext<NotesContextValue>(
+  {} as NotesContextValue,
 );
 
-interface NotesFilterContextProviderProps {
+interface NotesContextProviderProps {
   children: ReactNode;
-  value: NotesFilterContextValue;
+  value: NotesContextValue;
 }
 
-export const NotesFilterContextProvider = ({
+export const NotesContextProvider = ({
   children,
   value,
-}: NotesFilterContextProviderProps) => {
+}: NotesContextProviderProps) => {
   return (
-    <NoteFilterContext.Provider value={value}>
-      {children}
-    </NoteFilterContext.Provider>
+    <NotesContext.Provider value={value}>{children}</NotesContext.Provider>
   );
 };

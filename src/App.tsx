@@ -1,18 +1,21 @@
-import { createRouter, RouterProvider } from '@tanstack/react-router';
-import { useAuth } from './hooks/useAuth';
-import { routeTree } from './routeTree.gen';
-import { useGlobalStore } from './store/store';
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { routeTree } from "./routeTree.gen";
+import { useGlobalStore } from "./store/store";
 
 const router = createRouter({
   routeTree,
+  defaultPreload: "intent",
+  defaultStaleTime: 5000,
+  scrollRestoration: true,
+  defaultViewTransition: true,
   context: {
     user: null,
-  }
+  },
 });
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface Register {
-    router: typeof router,
+    router: typeof router;
   }
 }
 
