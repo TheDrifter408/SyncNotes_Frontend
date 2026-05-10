@@ -20,33 +20,35 @@ async function bootstrap() {
   app.enableCors({
     origin: 'http://localhost:5173',
     credentials: true,
-  })
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  });
 
-  app.use(cookieParser())
+  app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({
       exceptionFactory: (errors) => {
         const result = errors.reduce((acc, error) => {
-          const constraints = error.constraints ? Object.values(error.constraints) : [];
+          const constraints = error.constraints
+            ? Object.values(error.constraints)
+            : [];
           if (constraints) {
             acc[error.property] = constraints[0];
           }
           return error;
         }, {});
         return new BadRequestException({ errors: result });
-      }
+      },
     }),
     new ValidationPipe({
       whitelist: true,
       transform: true,
       transformOptions: {
         enableImplicitConversion: true,
-      }
+      },
     }),
-  )
+  );
 
   await app.listen(process.env.PORT ?? 3000);
-
 }
 bootstrap();

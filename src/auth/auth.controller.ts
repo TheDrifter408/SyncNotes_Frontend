@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Param,
   Delete,
   Res,
   UseGuards,
@@ -21,6 +20,11 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get()
+  findAll() {
+    return this.authService.findAll();
+  }
 
   @Post('signup')
   async signup(
@@ -56,9 +60,10 @@ export class AuthController {
     };
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @Post('signout')
+  signout(@Res({ passthrough: true }) response: Response) {
+    this.authService.removeCookies(response);
+    return { message: 'Signed out successfully' };
   }
 
   @UseGuards(JwtAuthGuard)
