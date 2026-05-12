@@ -22,6 +22,7 @@ function RouteComponent() {
             viewTransition={{
               types: ["slide-left"],
             }}
+            preload={false}
           >
             Login
           </Link>

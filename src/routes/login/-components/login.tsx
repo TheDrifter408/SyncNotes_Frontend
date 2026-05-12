@@ -92,7 +92,7 @@ export function Login() {
           </Link>
         </Button>
       </Header>
-      <Card className="w-[50%] mx-auto mt-[10 %]">
+      <Card className="w-[50%] mx-auto mt-[5%]">
         <CardHeader>
           <CardTitle>Login</CardTitle>
           <CardDescription>Login to your account to continue</CardDescription>
