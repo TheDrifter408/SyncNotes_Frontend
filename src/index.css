@@ -194,3 +194,25 @@ html:active-view-transition-type(slide-right) {
     transform: translateX(0);
   }
 }
+
+.dot-grid {
+  background-color: var(--background);
+
+  /* Create a small circle of color, then make the rest transparent */
+  background-image: radial-gradient(#444444 1px, transparent 1px);
+
+  /* The distance between the dots */
+  background-size: 30px 30px;
+}
+
+path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw 2s ease-out forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
