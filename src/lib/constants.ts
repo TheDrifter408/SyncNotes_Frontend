@@ -80,3 +80,9 @@ export const EDITOR_THEME = {
 };
 
 export const EMPTY_CONTENT = "(An empty Note)";
+
+export const HEIGHT = 800;
+export const AMPLITUDE = 100;
+export const FREQUENCY = 0.09;
+export const STRAND_LENGTH = 80;
+export const PHASE_DIFF = Math.PI;
