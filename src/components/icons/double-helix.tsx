@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { animate, spring } from "animejs";
+import { animate } from "animejs";
 import { generatePoints } from "@/lib/utils";
 import {
   AMPLITUDE,
